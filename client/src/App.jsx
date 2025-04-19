@@ -6,6 +6,7 @@ import SignUp from "./pages/SignUp"
 import About from "./pages/about"
 import Header from "./components/Header"
 
+
 export default function App() {
   return (
     <BrowserRouter>
