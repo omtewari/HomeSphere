@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import path from "path";
+import listingRouter from './routes/listing.route.js'
 import cookieParser from "cookie-parser";
 
 import userRouter from './routes/user.route.js';
@@ -29,6 +30,7 @@ app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/upload", uploadRouter); // ✅ new
+app.use('/api/listing', listingRouter);
 
 // ✅ Error handling middleware
 app.use((err, req, res, next) => {
