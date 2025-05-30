@@ -1,11 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function Contact({ listing }) {
   const [landlord, setLandlord] = useState(null);
   const [message, setMessage] = useState('');
+  const [sent, setSent] = useState(false);
+
   const onChange = (e) => {
     setMessage(e.target.value);
+    setSent(false); // reset sent flag when typing new message
   };
 
   useEffect(() => {
@@ -20,14 +23,18 @@ export default function Contact({ listing }) {
     };
     fetchLandlord();
   }, [listing.userRef]);
+
+  const handleSendClick = () => {
+    if (message.trim() === '') return;
+    setSent(true);
+  };
+
   return (
     <>
       {landlord && (
         <div className='flex flex-col gap-2'>
           <p>
-            Contact <span className='font-semibold'>{landlord.username}</span>{' '}
-            for{' '}
-            <span className='font-semibold'>{listing.name.toLowerCase()}</span>
+            Contact <span className='font-semibold'>{landlord.username}</span> for <span className='font-semibold'>{listing.name.toLowerCase()}</span>
           </p>
           <textarea
             name='message'
@@ -39,12 +46,23 @@ export default function Contact({ listing }) {
             className='w-full border p-3 rounded-lg'
           ></textarea>
 
-          <Link
-          to={`mailto:${landlord.email}?subject=Regarding ${listing.name}&body=${message}`}
-          className='bg-slate-700 text-white text-center p-3 uppercase rounded-lg hover:opacity-95'
-          >
-            Send Message          
-          </Link>
+       <a
+  href={`mailto:${landlord.email}?subject=Regarding ${listing.name}&body=${encodeURIComponent(message)}`}
+  className={`bg-slate-700 text-white text-center p-3 uppercase rounded-lg hover:opacity-95 ${message.trim() === '' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+  onClick={(e) => {
+    if (message.trim() === '') {
+      e.preventDefault(); // prevent opening mail client if no message
+      alert('Please enter a message before sending.');
+      return;
+    }
+    handleSendClick();
+  }}
+>
+  Send Message
+</a>
+
+
+          {sent && <p className='text-green-600 mt-2'>Your email client should open now. Check and send your message!</p>}
         </div>
       )}
     </>
