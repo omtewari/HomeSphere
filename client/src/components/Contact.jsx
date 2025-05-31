@@ -46,12 +46,16 @@ export default function Contact({ listing }) {
             className='w-full border p-3 rounded-lg'
           ></textarea>
 
-       <a
-  href={`mailto:${landlord.email}?subject=Regarding ${listing.name}&body=${encodeURIComponent(message)}`}
-  className={`bg-slate-700 text-white text-center p-3 uppercase rounded-lg hover:opacity-95 ${message.trim() === '' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+      <a
+  href={`https://mail.google.com/mail/?view=cm&fs=1&to=${landlord.email}&su=Regarding ${listing.name}&body=${encodeURIComponent(message)}`}
+  target="_blank"
+  rel="noopener noreferrer"
+  className={`bg-slate-700 text-white text-center p-3 uppercase rounded-lg hover:opacity-95 ${
+    message.trim() === '' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+  }`}
   onClick={(e) => {
     if (message.trim() === '') {
-      e.preventDefault(); // prevent opening mail client if no message
+      e.preventDefault();
       alert('Please enter a message before sending.');
       return;
     }
