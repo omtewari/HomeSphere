@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import path from "path";
 import listingRouter from './routes/listing.route.js'
 import cookieParser from "cookie-parser";
+import path from "path";
 
 import userRouter from './routes/user.route.js';
 import authRouter from './routes/auth.route.js';
@@ -22,6 +23,7 @@ mongoose.connect(process.env.MONGO)
 const app = express();
 app.use(express.json());
 app.use(cookieParser())
+const __dirname= path.resolve()
 
 // ✅ Serve the uploads folder statically
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
@@ -31,6 +33,13 @@ app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/upload", uploadRouter); // ✅ new
 app.use('/api/listing', listingRouter);
+
+app.use(express.static(path.join(__dirname,'/client/dist')))
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+})
+
 
 // ✅ Error handling middleware
 app.use((err, req, res, next) => {
